@@ -25,7 +25,14 @@ namespace InMemory.Caching.Controllers
 		public string Get()
 		{
 			//_memoryCache.Get("name"); //cachlenen veriyi okuma. sonuç object tipinde döner.
-			return _memoryCache.Get<string>("name"); //cachlenen veriyi okuma. sonuç generic olarak verilen tip türünde döner.
+			//return _memoryCache.Get<string>("name"); //cachlenen veriyi okuma. sonuç generic olarak verilen tip türünde döner.
+
+			//In memoryden çektiğimiz veriler üzerinde çeşitli çalışmalar yapabiliriz. Ancak uygulama kapandıktan sonra veriler bellekten silinir ve tekrar okumak istediğimizde veriye erişemez durumda oluruz , üzerinde gerçekleştireeğimiz işlem adımları sebebiyle de çalışma zamanı hataları alabiliriz. Bunu önlemek adına veriyi korunaklı bir şekilde elde etmek için aşağıdaki davranışı sergilemeliyiz. 
+			if(_memoryCache.TryGetValue<string>("name", out string name))
+				return name;
+
+			return "";
+			
 		}
 		
 	}
