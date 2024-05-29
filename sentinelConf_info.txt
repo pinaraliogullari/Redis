@@ -1,0 +1,25 @@
+#Sentinel tarafından izlenecek master sunucuları:
+#Bu talimat , 172.18.0.2 IP adresindeki 6379 portuna karşılık gelen Redis master sunucusunun izleneceğini ifade eder ve bu sunucuya mymaster adını verir.
+##Ayrıca sonraki 3 değeri bu master sunucusunu kaç adet sentinel sunucusunun onaylayacağını/kontrol edeceğini ifade eder.
+sentinel master mymaster 172.18.0.2 6379 3
+
+
+
+
+#Master sunucunun tepki vermemesi durumunda Sentinelin bekleme süresi
+#Bu talimat ise sentinel yapılanmasının mymaster sunucusunda olası bir sıkıntı meydana geldiği taktirde sorumluluğun(yani masterlığın) 
+#başka bir redis sunucusuna(slave) aktarılması kararının belirlenmesi için ne kadar bekleneceğini ms cinsinden belirtir.
+#Bu örnekte ise sentinel sunucusu, master sunucusuna 5 saniye boyunca erişilemediğini tespit ederse failover işlemini başlatacaktır.
+sentinel down-after-milliseconds mymaster 5000
+
+
+
+#master sunucunun yeniden yapılandırılması için Sentinelin beklemesi gereken süre:
+#Bu talimatta ise sentinelin failover sürecini gerçekleştirirken timeout süresini belirtmektedir.
+sentinel failover-timeout mymaster 10000
+
+
+#sentinel tarafından eşzamanlı olarak kullanılacak slave sayısı:
+#Bu komut ise sentinelin birden fazla yedek sunucuya(slave) eş zamanlı olarak senkronize edeceği sayıyı belirtmektedir. 
+#Yani slave sunucu sayısını ifade eder.
+sentinel parallel-syncs mymaster 3
