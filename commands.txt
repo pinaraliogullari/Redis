@@ -1,15 +1,36 @@
-	- docker network create redis-network
+	
+network oluşturma
+        - docker network create redis-network
+
+network silme
+        - docker network rm redis-network
+
+network listeleme
+        - docker network ls
+
+slave oluşturma
 	- docker run -d --name redis-master -p 6389:6379 --network redis-network redis redis-server
 	- docker run -d --name redis-slave1 -p 6390:6379 --network redis-network redis redis-server --slaveof redis-master 6379
 	- docker run -d --name redis-slave2 -p 6391:6379 --network redis-network redis redis-server --slaveof redis-master 6379
 	- docker run -d --name redis-slave3 -p 6392:6379 --network redis-network redis redis-server --slaveof redis-master 6379
 
-	- Docker'ın IP'sini bulma docker inspect --format='{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' redis-master
+Docker'daki istenen containerın IP'sini bulma
+        - docker inspect --format='{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' redis-master
+        - sentinel.conf dosyası mutlaka C:\Users\{KullaniciAdin} dizininde olmalıdır.
 
-	- sentinel.conf dosyası mutlaka C:\Users\{KullaniciAdin} dizininde olmalıdır.
+Docker içerisinde tüm containerların iplerini öğrenme
+        - docker inspect -format='{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
 
-
+Sentinel sunucu oluşturma
 	- docker run -d --name redis-sentinel-1 -p 6393:26379 --network redis-network -v "${PWD}\sentinel.conf:/etc/redis/sentinel.conf" redis redis-sentinel /etc/redis/sentinel.conf
 	- docker run -d --name redis-sentinel-2 -p 6394:26379 --network redis-network -v "${PWD}\sentinel.conf:/etc/redis/sentinel.conf" redis redis-sentinel /etc/redis/sentinel.conf
 	- docker run -d --name redis-sentinel-3 -p 6395:26379 --network redis-network -v "${PWD}\sentinel.conf:/etc/redis/sentinel.conf" redis redis-sentinel /etc/redis/sentinel.conf
+
+Dockerdaki containerlerı listeleme
+        - docker ps
+
+İstenen sunucunun replikasyon bilgisine erişme
+        - docker exec -it redis-slave1 redis-cli
+        - info replication
+
 
